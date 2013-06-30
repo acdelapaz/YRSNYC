@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+<script type="text/javascript">
+function findRange(){
+var service = new google.maps.DistanceMatrixService();
+var origin = document.getElementById("origin").value;
+var dest = document.getElementById("dest").value;
+service.getDistanceMatrix(
+    {
+	    
+        origins: [origin],
+        destinations: [dest],
+        travelMode: google.maps.TravelMode.BICYCLING,
+        avoidHighways: false,
+        avoidTolls: false
+    }, 
+    callback
+);
+}
+function callback(response, status) {
+    var dist = document.getElementById("dist"),
+		dura = document.getElementById("dura"),
+		reachable = document.getElementById("reachable");
+		console.log(response);
+
+    if(status=="OK") {
+        dist.value = response.rows[0].elements[0].distance.text;
+		dura.value = response.rows[0].elements[0].duration.text;
+		if(response.rows[0].elements[0].duration.value <= document.getElementById("time").value){
+		  reachable.value = "Yes";
+		}
+        else{
+		  reachable.value = "No";
+		} 
+    } else {
+        alert("Error: " + status);
+    
+    }
+}
+</script>
+</head>
+<body>
+<form>
+    <br>
+    <h1>Citi Bike Range Finder<br><br></h1>
+    Origin: <select id = "origin">
+	  <option></option>
+	  <option value = "130 Franklin Street, New York, NY 10013, USA">		130 Franklin Street, New York, NY 10013, USA		</option>
+	  <option value = "600 West 52nd Street, New York, NY 10019, USA">		600 West 52nd Street, New York, NY 10019, USA		</option>
+	  <option value = "25 St James Place, New York, NY 10038, USA">			25 St James Place, New York, NY 10038, USA			</option>
+	  <option value = "607-617 Atlantic Avenue, Brooklyn, Ny 11217, USA">	607-617 Atlantic Avenue, Brooklyn, Ny 11217, USA	</option>
+	  <option value = "30 Macon Street, Brooklyn, NY 11216, USA">			30 Macon Street, Brooklyn, NY 11216, USA			</option>
+	  <option value = "1838-1854 Broadway, New York, NY 10023, USA">		1838-1854 Broadway New York, NY 10023, USA			</option>
+	  </select><br><br>
+    Destination: <select id = "dest">
+	  <option></option>
+	  <option value = "130 Franklin Street, New York, NY 10013, USA">130 Franklin Street, New York, NY 10013, USA</option>
+	  <option value = "600 West 52nd Street, New York, NY 10019, USA">600 West 52nd Street, New York, NY 10019, USA</option>
+	  <option value = "25 St James Place, New York, NY 10038, USA">25 St James Place, New York, NY 10038, USA</option>
+	  <option value = "607-617 Atlantic Avenue, Brooklyn, Ny 11217, USA">607-617 Atlantic Avenue, Brooklyn, Ny 11217, USA</option>
+	  <option value = "30 Macon Street, Brooklyn, NY 11216, USA">30 Macon Street, Brooklyn, NY 11216, USA</option>
+	  <option value = "1838-1854 Broadway, New York, NY 10023, USA">1838-1854 Broadway New York, NY 10023, USA </option>
+	  </select><br><br>
+	Time Limit: <select id = "time">
+	  <option></option>
+	  <option value = 1800>30 minutes</option>
+	  <option value = 2700>45 minutes</option>
+	  </select><br><br>
+	<input type="button" onclick="findRange()" value="Go" /><br><br>
+    Distance: <input id="dist" type="text" style="width:35em"><br><br>
+	Duration: <input id="dura" type="text" style="width:35em"><br><br>
+	Can you reach it? <input id="reachable" type="text" style="width:35em">
+</body>
+</html>
